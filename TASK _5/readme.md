@@ -1,0 +1,1 @@
+this task was a bit easy after learning c programming compared to first time when i saw the task and i have a bit confusion too in the task whether we must create a new program or should me correct the given program , there is no link to program where we must correct , so i decided to create a new program
