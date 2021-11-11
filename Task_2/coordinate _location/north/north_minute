@@ -1,0 +1,7 @@
+$x ==  jot 100 1 
+$ if y == x *5 ;fi
+     if $y / 5 ==0';fi
+        if $x==1
+           then echo $y; fi
+          
+ answer == 5
