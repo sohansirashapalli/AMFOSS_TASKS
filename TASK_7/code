@@ -1,0 +1,64 @@
+package main
+
+import (
+    "fmt"
+    "strings"
+    "time"
+
+)
+
+func main() {
+    c := colly.NewCollector(
+        colly.AllowedDomains("https://www.forbes.com/real-time-billionaires/#131241903d78"),
+    )
+
+    c.OnHTML("article", func(e *colly.HTMLElement) {
+        isbillanariesPage := false
+        
+        metaTags := e.DOM.ParentsUntil("~").Find("meta")
+        metaTags.Each(func(_ int, s *goquery.Selection) {
+  
+            Name, _ := s.Attr("Name")
+            if strings.EqualFold(Name, "og:type") {
+                networth, _ := s.Attr("networth")
+            if strings.EqualFold(networth, "og:type"){
+                change, _ := s.Attr("change")
+            if strings.EqualFold(change, "og:type"){
+                age, _ := s.Attr("age")
+            if strings.EqualFold(age, "og:type"){
+                source, _ := s.Attr("source")
+            if strings.EqualFold(source, "og:type"){
+                country, _ := s.Attr("country")
+                
+                isbillanariesPage = strings.EqualFold(networth,change,age,source,country, "article")
+            }}}}}
+        })
+
+        if isbillanariesPage {
+            
+            fmt.Println("Billanaries: ", e.DOM.Find("h1").Text())
+            
+            fmt.Println(
+                "Description: ",
+                e.DOM.Find(".description").Find("p").Text())
+        }
+    })
+
+    c.OnHTML("a[href]", func(e *colly.HTMLElement) {
+        
+        link := e.Attr("href")
+        
+        c.Visit(e.Request.AbsoluteURL(link))
+    })
+
+    c.Limit(&colly.LimitRule{
+        DomainGlob:  "*",
+        RandomDelay: 1 * time.Second,
+    })
+
+    c.OnRequest(func(r *colly.Request) {
+        fmt.Println("Visiting", r.URL.String())
+    })
+
+    c.Visit("https://www.forbes.com/real-time-billionaires/#131241903d78")
+}
